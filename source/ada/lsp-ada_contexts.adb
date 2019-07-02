@@ -72,7 +72,16 @@ package body LSP.Ada_Contexts is
             Charset => Self.Get_Charset);
       end loop;
 
-      return Definition.P_Find_All_References (Source_Units);
+      declare
+         Refs : constant Libadalang.Analysis.Base_Id_Array :=
+           Definition.P_Find_All_References (Source_Units);
+      begin
+         return R : Libadalang.Analysis.Ada_Node_Array (1 .. Refs'Length) do
+            for I in Refs'Range loop
+               R (I) := Refs (I).As_Ada_Node;
+            end loop;
+         end return;
+      end;
    end Find_All_References;
 
    -----------------------
